@@ -163,7 +163,6 @@ END:
 BBG_err gpio_export(const char *pin) {
 	DEBUG("gpio_export()");
 	int gpio_number = 0;
-	char gpio_driver_path[64];
 
 	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
 		ERR("Failed to get gpio_number");
@@ -319,7 +318,6 @@ END:
 BBG_err gpio_unexport(const char *pin) {
 	DEBUG("gpio_unexport()");
 	int gpio_number = 0;
-	char gpio_driver_path[64];
 
 	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
 		ERR("Failed to get gpio_number");
