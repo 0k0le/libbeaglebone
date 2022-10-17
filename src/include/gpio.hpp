@@ -20,6 +20,7 @@
 #include "beaglebone.hpp"
 #include "macro.hpp"
 #include "pinmux.hpp"
+#include "common.hpp"
 
 #define GPIO_SYSFS_DIR "/sys/class/gpio/"
 #define GPIO_SYSFS_EXPORT GPIO_SYSFS_DIR "export"

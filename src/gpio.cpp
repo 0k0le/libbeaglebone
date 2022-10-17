@@ -9,6 +9,7 @@
  */
 
 #include "gpio.hpp"
+#include "common.hpp"
 
 static pins_t table[] = {
   	{ "USR0", "USR0", 53, -1, -1},
@@ -126,7 +127,8 @@ static int get_gpio_by_pin(const char *pin) {
 	return -1;
 }
 
-BBG_err gpio_export(const char *pin) {
+/* Old GPIO export */
+/*BBG_err gpio_export(const char *pin) {
 	DEBUG("gpio_export()");
 	BBG_err ret = BBG_ERR_SUCCESS;
 	int gpio_number = 0;
@@ -156,6 +158,24 @@ END:
 		close(driver_fd);
 
 	return ret;
+}*/
+
+BBG_err gpio_export(const char *pin) {
+	DEBUG("gpio_export()");
+	int gpio_number = 0;
+	char gpio_driver_path[64];
+
+	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
+		ERR("Failed to get gpio_number");
+		return BBG_ERR_FAILED;
+	}
+
+	if(export_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {
+		ERR("export_device() returned an error");
+		return BBG_ERR_FAILED;
+	}
+
+	return BBG_ERR_SUCCESS;
 }
 
 BBG_err gpio_set_direction(const char *pin, const char *direction) {
@@ -263,7 +283,8 @@ BBG_err gpio_init(const char *pin, const char *direction, const int value) {
 	return BBG_ERR_SUCCESS;
 }
 
-BBG_err gpio_unexport(const char *pin) {
+/* Old gpio_unexport */
+/*BBG_err gpio_unexport(const char *pin) {
 	DEBUG("gpio_unexport()");
 	BBG_err ret = BBG_ERR_SUCCESS;
 	int gpio_number = 0;
@@ -293,6 +314,24 @@ END:
 		close(driver_fd);
 
 	return ret;
+}*/
+
+BBG_err gpio_unexport(const char *pin) {
+	DEBUG("gpio_unexport()");
+	int gpio_number = 0;
+	char gpio_driver_path[64];
+
+	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
+		ERR("Failed to get gpio_number");
+		return BBG_ERR_FAILED;
+	}
+
+	if(unexport_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {
+		ERR("unexport_device() returned an error");
+		return BBG_ERR_FAILED;
+	}
+
+	return BBG_ERR_SUCCESS;
 }
 
 BBG_err gpio_close(const char *pin) {

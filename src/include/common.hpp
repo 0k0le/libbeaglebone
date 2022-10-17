@@ -21,3 +21,4 @@
 
 BBG_err create_dir_from_device_address(const char *ocp_dir, const char *address, char *new_dir, size_t maxlen, const char *mustmatch = nullptr);
 BBG_err export_device(const char *device_path, int index);
+BBG_err unexport_device(const char *device_path, int index);

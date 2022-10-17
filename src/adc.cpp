@@ -21,6 +21,14 @@ static adc_info_t table[] {
 	{nullptr, 0}
 };
 
+/* pin_number get_ain_from_pin(string pin)
+ * 
+ * Input: Beaglebone pin, eg: "P9_33"
+ * Output: Beaglebone ain number.
+ *
+ * A beaglebone ain number is used to locate the correct
+ * adc driver file
+ * */
 static int get_ain_from_pin(const char *pin) {
 	for(adc_info_t *adc = table; adc->pin != nullptr; adc++) {
 		if(strcmp(adc->pin, pin) == 0) {
@@ -33,6 +41,13 @@ static int get_ain_from_pin(const char *pin) {
 	return -1;
 }
 
+/*
+ * adc_init(string pin)
+ *
+ * Input: Beaglebone pin, eg: "P9_33"
+ *
+ * This will initialize the pin as an ADC
+ */
 BBG_err adc_init(const char *pin) {
 	if(pinmux_set_pinmode(pin, "adc") == BBG_ERR_FAILED) {
 		ERR("Failed to set %s to adc", pin);
@@ -44,6 +59,14 @@ BBG_err adc_init(const char *pin) {
 	return BBG_ERR_SUCCESS;
 }
 
+/*
+ * adc_read(string pin, float *ret_value)
+ *
+ * Input1: Beaglebone pin, eg: "P9_33"
+ * Input2: Address to float in memory to write result
+ *
+ * Convert analog to digital on "pin" then write it to *ret_value
+ */
 BBG_err adc_read(const char *pin, float *ret_value) {
 	BBG_err ret = BBG_ERR_SUCCESS;
 	char adc_driver_path[64];
