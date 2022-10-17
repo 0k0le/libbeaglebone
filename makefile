@@ -4,16 +4,13 @@
 # beaglebone-firmware
 
 CC=g++
-BUILDOPTS=-Wall -Wextra -pedantic -c -O2 -Isrc/include -D_DEBUG
+BUILDOPTS=-Wall -Wextra -pedantic -fpic -c -O2 -Isrc/include -D_DEBUG
 
 BINDIR=bin/
-BIN=bin/beaglebone-controller
+BIN=bin/libbeaglebone.so
 
 INTDIR=bin/int
 SRCDIR=src
-
-app.o=$(INTDIR)/app.o
-app.cpp=$(SRCDIR)/app.cpp
 
 pinmux.o=$(INTDIR)/pinmux.o
 pinmux.cpp=$(SRCDIR)/pinmux.cpp
@@ -30,11 +27,8 @@ gpio.cpp=$(SRCDIR)/gpio.cpp
 adc.o=$(INTDIR)/adc.o
 adc.cpp=$(SRCDIR)/adc.cpp
 
-$(BIN): init $(app.o) $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o)
-	$(CC) $(app.o) $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(LDOPTS) -o $(BIN)
-
-$(app.o): $(app.cpp)
-	$(CC) $(app.cpp) $(BUILDOPTS) -o $(app.o)
+$(BIN): init $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o)
+	$(CC) -shared $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(LDOPTS) -o $(BIN)
 
 $(pinmux.o): $(pinmux.cpp)
 	$(CC) $(pinmux.cpp) $(BUILDOPTS) -o $(pinmux.o)

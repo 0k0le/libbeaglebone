@@ -97,10 +97,10 @@ static void get_pwm_info(pwm_object *pwmobj) {
 	lseek(pwmobj->polarity_fd, 0, SEEK_SET);
 	lseek(pwmobj->period_fd, 0, SEEK_SET);
 
-	read(pwmobj->enable_fd, enable, 31);
-	read(pwmobj->dutycycle_fd, duty_cycle, 31);
-	read(pwmobj->polarity_fd, polarity, 31);
-	read(pwmobj->period_fd, period, 31);
+	(void)read(pwmobj->enable_fd, enable, 31);
+	(void)read(pwmobj->dutycycle_fd, duty_cycle, 31);
+	(void)read(pwmobj->polarity_fd, polarity, 31);
+	(void)read(pwmobj->period_fd, period, 31);
 
 	printf("[PWMINFO]\n"
 			"\tEnable: %s"
