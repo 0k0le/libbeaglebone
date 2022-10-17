@@ -1,0 +1,9 @@
+init_pwm:
+	. Load all sysfs paths into memory from /sys/devices/platform/ocp/
+
+setup_pwm:
+	. init_pwm()
+
+	. Set pin mode
+
+	. In II
