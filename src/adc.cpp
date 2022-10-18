@@ -21,7 +21,8 @@ static adc_info_t table[] {
 	{nullptr, 0}
 };
 
-/* pin_number get_ain_from_pin(string pin)
+/*
+ * pin_number get_ain_from_pin(string pin)
  * 
  * Input: Beaglebone pin, eg: "P9_33"
  * Output: Beaglebone ain number.
@@ -53,8 +54,6 @@ BBG_err adc_init(const char *pin) {
 		ERR("Failed to set %s to adc", pin);
 		return BBG_ERR_FAILED;
 	}
-
-	//int fd = open(ADC_SYSFS_DIR "in_voltage"
 
 	return BBG_ERR_SUCCESS;
 }

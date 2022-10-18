@@ -33,12 +33,12 @@ typedef struct pwm_object {
 	int polarity_fd;
 
 	int period; // nanoseconds
-	int dutycycle; // nanoseconds
+	int dutycycle, dutycycle_percentage; // nanoseconds
 	int polarity;
 } pwm_object;
 
 BBG_err pwm_init(const char *pin, int frequency, int duty_cycle, pwm_object *pwmobj);
-BBG_err pwm_set_frequency(pwm_object *pwmobj, int frequency);
+BBG_err pwm_set_frequency(pwm_object *pwmobj, int frequency, bool reset_duty=true);
 BBG_err pwm_set_duty_cycle(pwm_object *pwmobj, int dutycycle);
 void pwm_cleanup(pwm_object *pwmobj);
 

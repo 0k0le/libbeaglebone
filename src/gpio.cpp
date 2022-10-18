@@ -127,39 +127,6 @@ static int get_gpio_by_pin(const char *pin) {
 	return -1;
 }
 
-/* Old GPIO export */
-/*BBG_err gpio_export(const char *pin) {
-	DEBUG("gpio_export()");
-	BBG_err ret = BBG_ERR_SUCCESS;
-	int gpio_number = 0;
-	char gpio_number_str[8];
-	int driver_fd = -1;
-
-	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
-		ERR("Failed to get gpio_number");
-		ret = BBG_ERR_FAILED;
-		goto END;
-	}
-
-	if((driver_fd = open(GPIO_SYSFS_EXPORT, O_WRONLY)) == -1) {
-		ERR("Failed to open: %s", GPIO_SYSFS_EXPORT);
-		ret = BBG_ERR_FAILED;
-		goto END;
-	}
-
-	snprintf(gpio_number_str, 8, "%d", gpio_number);
-
-	if(write(driver_fd, gpio_number_str, strlen(gpio_number_str)) == -1) {
-		WARN("Failed to write to: %s, this might be fatal", GPIO_SYSFS_EXPORT);
-	}
-
-END:
-	if(driver_fd != -1)
-		close(driver_fd);
-
-	return ret;
-}*/
-
 BBG_err gpio_export(const char *pin) {
 	DEBUG("gpio_export()");
 	int gpio_number = 0;
@@ -281,39 +248,6 @@ BBG_err gpio_init(const char *pin, const char *direction, const int value) {
 	
 	return BBG_ERR_SUCCESS;
 }
-
-/* Old gpio_unexport */
-/*BBG_err gpio_unexport(const char *pin) {
-	DEBUG("gpio_unexport()");
-	BBG_err ret = BBG_ERR_SUCCESS;
-	int gpio_number = 0;
-	char gpio_number_str[8];
-	int driver_fd = -1;
-
-	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
-		ERR("Failed to get gpio_number");
-		ret = BBG_ERR_FAILED;
-		goto END;
-	}
-
-	if((driver_fd = open(GPIO_SYSFS_UNEXPORT, O_WRONLY)) == -1) {
-		ERR("Failed to open: %s", GPIO_SYSFS_EXPORT);
-		ret = BBG_ERR_FAILED;
-		goto END;
-	}
-
-	snprintf(gpio_number_str, 8, "%d", gpio_number);
-
-	if(write(driver_fd, gpio_number_str, strlen(gpio_number_str)) == -1) {
-		WARN("Failed to write to: %s, this might be fatal", GPIO_SYSFS_EXPORT);
-	}
-
-END:
-	if(driver_fd != -1)
-		close(driver_fd);
-
-	return ret;
-}*/
 
 BBG_err gpio_unexport(const char *pin) {
 	DEBUG("gpio_unexport()");

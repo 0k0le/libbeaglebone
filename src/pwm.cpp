@@ -301,8 +301,8 @@ BBG_err pwm_init(const char *pin, int frequency, int duty_cycle, pwm_object *pwm
 		goto END;
 	}
 
-	// This is test - will remove later
-	pwm_set_frequency(pwmobj, frequency);
+
+	pwm_set_frequency(pwmobj, frequency, false);
 	pwm_set_duty_cycle(pwmobj, duty_cycle);
 	write_enable(pwmobj, "1");
 	get_pwm_info(pwmobj);
@@ -320,6 +320,7 @@ BBG_err pwm_set_duty_cycle(pwm_object *pwmobj, int dutycycle) {
 	float f_dutycycle = static_cast<float>(dutycycle);
 	float f_period = static_cast<float>(pwmobj->period);
 
+	pwmobj->dutycycle_percentage = dutycycle;
 	pwmobj->dutycycle = static_cast<int>(f_period * (f_dutycycle / 100.0));
 
 	char temp[32];
@@ -333,7 +334,7 @@ BBG_err pwm_set_duty_cycle(pwm_object *pwmobj, int dutycycle) {
 	return BBG_ERR_SUCCESS;
 }
 
-BBG_err pwm_set_frequency(pwm_object *pwmobj, int frequency) {
+BBG_err pwm_set_frequency(pwm_object *pwmobj, int frequency, bool reset_duty) {
 	if(pwmobj == nullptr) { 
 		ERR("pwmobj cannot be null");
 		return BBG_ERR_FAILED;
@@ -344,14 +345,41 @@ BBG_err pwm_set_frequency(pwm_object *pwmobj, int frequency) {
 		return BBG_ERR_FAILED;
 	}
 
-	pwmobj->period = (1e9/frequency); // Convert to nanoseconds
-	
+	int temp_period = pwmobj->period;
+	pwmobj->period = (1e9/frequency);
+
 	char temp[32];
 	snprintf(temp, 32, "%d", pwmobj->period);
 
-	if(write_period(pwmobj, temp) == BBG_ERR_FAILED) {
-		ERR("write_period");
-		return BBG_ERR_FAILED;
+	if(!reset_duty) {
+		if(write_period(pwmobj, temp) == BBG_ERR_FAILED) {
+			ERR("write_period()");
+			return BBG_ERR_FAILED;
+		}
+
+		return BBG_ERR_SUCCESS;
+	}
+
+	if(pwmobj->period > temp_period) {
+		if(write_period(pwmobj, temp) == BBG_ERR_FAILED) {
+			ERR("write_period");
+			return BBG_ERR_FAILED;
+		}
+
+		if(pwm_set_duty_cycle(pwmobj, pwmobj->dutycycle_percentage) == BBG_ERR_FAILED) {
+			ERR("Failed to reset duty cycle");
+			return BBG_ERR_FAILED;
+		}
+	} else {
+		if(pwm_set_duty_cycle(pwmobj, pwmobj->dutycycle_percentage) == BBG_ERR_FAILED) {
+			ERR("Failed to reset duty cycle");
+			return BBG_ERR_FAILED;
+		}
+		
+		if(write_period(pwmobj, temp) == BBG_ERR_FAILED) {
+			ERR("write_period");
+			return BBG_ERR_FAILED;
+		}
 	}
 
 	return BBG_ERR_SUCCESS;

@@ -10,7 +10,15 @@
 
 #include "common.hpp"
 
-
+/*
+ * export_device(string device_directory, int device_index)
+ *
+ * Input1: A string that is the directory that contains the driver files
+ * Input2: The index that is written to the export driver file
+ *
+ * By writing the device number to the "export driver file" you can "enable"
+ * the device you are exporting.
+ */
 BBG_err export_device(const char *device_path, int index) {
 	BBG_err ret = BBG_ERR_SUCCESS;
 	char export_device[512];
@@ -49,6 +57,15 @@ END:
 	return ret;
 }
 
+/*
+ * unexport_device(string device_directory, int index)
+ *
+ * Input1: A string that is the directory that contains the driver files
+ * Input2: The index that is written to the unexport driver file
+ *
+ * By writing a device index to the unexport driver file, you make a device
+ * unavailable
+ */
 BBG_err unexport_device(const char *device_path, int index) {
 	BBG_err ret = BBG_ERR_SUCCESS;
 	char unexport_device[512];
@@ -87,17 +104,25 @@ END:
 	return ret;
 }
 
+/*
+ * Dont use unless you know what you are doing...
+ *
+ * create_dir_from_device_address(string part1_string, string index_string, string new_string, maxlen, mustmatch_requirement)
+ *
+ */
 BBG_err create_dir_from_device_address(const char *ocp_dir, const char *address, char *new_dir, size_t maxlen, const char *mustmatch) {
 	BBG_err ret = BBG_ERR_SUCCESS;
 	DIR *dir = nullptr;
 	struct dirent *dirinfo = nullptr;
 	char dirname[BBG_PATH_STR_SIZE];
 
+	// Sanatize
 	if(ocp_dir == nullptr || address == nullptr || new_dir == nullptr) {
 		ret = BBG_ERR_FAILED;
 		goto END;
 	}
 
+	// Open base as directory
 	if((dir = opendir(ocp_dir)) == nullptr) {
 		ERR("Failed to open ocp_dir: %s", ocp_dir);
 		ret = BBG_ERR_FAILED;
