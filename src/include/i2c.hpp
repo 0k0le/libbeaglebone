@@ -8,6 +8,12 @@
  *   \\\\\\\\\\\\\\\\\
  */
 
+/*
+ * Helpful documentation:
+ * http://nilhcem.com/android-things/arduino-as-an-i2c-slave
+ * https://www.ti.com/lit/an/slva704/slva704.pdf?ts=1666163475515&ref_url=https%253A%252F%252Fwww.google.com%252F
+ */
+
 #pragma once
 
 #include "beaglebone.hpp"

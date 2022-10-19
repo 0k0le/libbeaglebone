@@ -86,10 +86,15 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
 		return BBG_ERR_FAILED;
 	}
 
-	if(i2c_smbus_read_block_data(i2cdev->fd, cmd, (__u8 *)buffer) == -1) {
+	union i2c_smbus_data data;
+	data.block[0] = 32;
+
+	if(i2c_smbus_access(i2cdev->fd, I2C_SMBUS_READ, cmd, I2C_SMBUS_I2C_BLOCK_DATA, &data) == -1) {
 		ERR("Failed to read block data");
 		return BBG_ERR_FAILED;
 	}
+
+	memcpy(buffer, &data.block[1], data.block[0]);
 
 	return BBG_ERR_SUCCESS;
 }
