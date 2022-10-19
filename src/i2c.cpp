@@ -9,6 +9,7 @@
  */
 
 #include "i2c.hpp"
+#include <linux/i2c.h>
 
 BBG_err i2c_open_device(i2cdevice *i2cdev, int device_index) {
 	char driver_path[64];
@@ -60,7 +61,7 @@ BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 		ERR("i2cdev is uninitialized");
 		return BBG_ERR_FAILED;
 	}
-
+	
 	if(i2cdev->addr == addr)
 		return BBG_ERR_SUCCESS;
 
@@ -70,6 +71,28 @@ BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 	}
 
 	i2cdev->addr = addr;
+
+	return BBG_ERR_SUCCESS;
+}
+
+BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer) {
+	if(i2cdev == nullptr) {
+		ERR("i2cdev cannot be nullptr");
+		return BBG_ERR_FAILED;
+	}
+
+	if(i2cdev->fd == -1) {
+		ERR("i2cdev is uninitialized");
+		return BBG_ERR_FAILED;
+	}
+
+	union i2c_smbus_data data;
+	if(i2c_smbus_access(i2cdev->fd, I2C_SMBUS_READ, I2C_SMBUS_QUICK, I2C_SMBUS_BLOCK_DATA, &data)) {
+		ERR("i2c_smbus_access()");
+		return BBG_ERR_FAILED;
+	}
+
+	memcpy(buffer, &data.block[1], data.block[0]);
 
 	return BBG_ERR_SUCCESS;
 }
