@@ -5,6 +5,7 @@
 
 CC=g++
 BUILDOPTS=-Wall -Wextra -pedantic -fpic -c -O2 -Isrc/include -D_DEBUG
+LDOPTS=-li2c
 
 BINDIR=bin/
 BIN=bin/libbeaglebone.so
