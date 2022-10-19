@@ -50,4 +50,4 @@ BBG_err i2c_open_device(i2cdevice *i2cdev, int device_index = DEFAULT_BBG_I2C_DE
 BBG_err i2c_close_device(i2cdevice *i2cdev);
 BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr);
 BBG_err i2c_read_byte_data(i2cdevice *i2cdev, char *byte, __u8 cmd);
-BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, unsigned int maxlen, __u8 cmd);
+BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd);
