@@ -99,6 +99,27 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
 	return BBG_ERR_SUCCESS;
 }
 
+BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, unsigned int maxlen, __u8 cmd) {
+	if(i2cdev == nullptr) {
+		ERR("i2cdev cannot be nullptr");
+		return BBG_ERR_FAILED;
+	}
+
+	if(i2cdev->fd == -1) {
+		ERR("i2cdev is uninitialized");
+		return BBG_ERR_FAILED;
+	}
+
+	union i2c_smbus_data data;
+
+	if(i2c_smbus_access(i2cdev->fd, I2C_SMBUS_WRITE, cmd, maxlen, &data) == -1) {
+		ERR("Failed to write block data");
+		return BBG_ERR_FAILED;
+	}
+
+	return BBG_ERR_SUCCESS;
+}
+
 BBG_err i2c_read_byte_data(i2cdevice *i2cdev, char *data, __u8 cmd) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
