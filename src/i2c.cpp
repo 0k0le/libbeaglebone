@@ -75,7 +75,7 @@ BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 	return BBG_ERR_SUCCESS;
 }
 
-BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer) {
+BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
 		return BBG_ERR_FAILED;
@@ -86,8 +86,8 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer) {
 		return BBG_ERR_FAILED;
 	}
 
-	if(read(i2cdev->fd, buffer, 32) == -1) {
-		ERR("Failed to read data");
+	if(i2c_smbus_read_block_data(i2cdev->fd, cmd, (__u8 *)buffer) == -1) {
+		ERR("Failed to read block data");
 		return BBG_ERR_FAILED;
 	}
 
