@@ -99,6 +99,18 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
 	return BBG_ERR_SUCCESS;
 }
 
+static BBG_err buffer_to_data(union i2c_smbus_data *data, void *buffer, unsigned int len) {
+	if(len > 32) {
+		ERR("len cannot be greater than 32");
+		return BBG_ERR_FAILED;
+	}
+
+	data->block[0] = len;
+	memcpy(&data->block + 1, buffer, len);
+
+	return BBG_ERR_SUCCESS;
+}
+
 BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
@@ -110,8 +122,14 @@ BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) 
 		return BBG_ERR_FAILED;
 	}
 
-	if(i2c_smbus_write_i2c_block_data(i2cdev->fd, cmd, maxlen, (const __u8 *)buffer) == -1) {
-		ERR("Failed to write block data");
+	union i2c_smbus_data data;
+	if(buffer_to_data(&data, buffer, maxlen) == BBG_ERR_FAILED) {
+		ERR("buffer_to_data()");
+		return BBG_ERR_FAILED;
+	}
+
+	if(i2c_smbus_access(i2cdev->fd, I2C_SMBUS_WRITE, cmd, I2C_SMBUS_I2C_BLOCK_BROKEN, &data)) {
+		ERR("i2c_smbus_access()");
 		return BBG_ERR_FAILED;
 	}
 
