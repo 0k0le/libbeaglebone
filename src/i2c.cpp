@@ -74,7 +74,7 @@ BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 	return BBG_ERR_SUCCESS;
 }
 
-BBG_err i2c_read_byte(i2cdevice *i2cdev, __s32 *data) {
+BBG_err i2c_read_byte(i2cdevice *i2cdev, char *data) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
 		return BBG_ERR_FAILED;
@@ -85,7 +85,7 @@ BBG_err i2c_read_byte(i2cdevice *i2cdev, __s32 *data) {
 		return BBG_ERR_FAILED;
 	}
 
-	*data = i2c_smbus_read_byte(i2cdev->fd);
+	*data = i2c_smbus_read_byte(i2cdev->fd) & 0xff;
 	if(*data == -1) {
 		ERR("Failed to smbus_read");
 		return BBG_ERR_FAILED;

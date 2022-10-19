@@ -33,4 +33,4 @@ extern "C" __s32 i2c_smbus_read_byte(int file);
 BBG_err i2c_open_device(i2cdevice *i2cdev, int device_index = DEFAULT_BBG_I2C_DEVICE);
 BBG_err i2c_close_device(i2cdevice *i2cdev);
 BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr);
-BBG_err i2c_read_byte(i2cdevice *i2cdev, __s32 *byte);
+BBG_err i2c_read_byte(i2cdevice *i2cdev, char *byte);
