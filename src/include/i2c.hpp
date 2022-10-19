@@ -19,7 +19,7 @@
 #include <linux/i2c-dev.h>
 //#include <i2c/smbus.h>
 
-#define DEFAULT_BBG_I2C_DEVICE 1
+#define DEFAULT_BBG_I2C_DEVICE 2
 #define I2C_DEVICE_PREFIX "/dev/i2c-"
 
 typedef struct i2cdevice {
