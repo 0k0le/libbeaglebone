@@ -125,7 +125,12 @@ BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) 
 		return BBG_ERR_FAILED;
 	}
 
-	union i2c_smbus_data data;
+	if(i2c_smbus_write_i2c_block_data(i2cdev->fd, cmd, maxlen, (const __u8 *)buffer) == -1) {
+		ERR("Failed to write block data");
+		return BBG_ERR_FAILED;
+	}
+
+/*	union i2c_smbus_data data;
 	if(buffer_to_data(&data, buffer, maxlen) == BBG_ERR_FAILED) {
 		ERR("buffer_to_data()");
 		return BBG_ERR_FAILED;
@@ -134,7 +139,7 @@ BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) 
 	if(i2c_smbus_access(i2cdev->fd, I2C_SMBUS_WRITE, cmd, I2C_SMBUS_I2C_BLOCK_BROKEN, &data)) {
 		ERR("i2c_smbus_access()");
 		return BBG_ERR_FAILED;
-	}
+	}*/
 
 	return BBG_ERR_SUCCESS;
 }
