@@ -47,7 +47,7 @@ extern "C" __s32 i2c_smbus_write_i2c_block_data(int file, __u8 command, __u8 len
 extern "C" __s32 i2c_smbus_read_i2c_block_data(int file, __u8 command, __u8 length,
 					   __u8 *values);
 
-BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd);
+BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd);
 BBG_err i2c_open_device(i2cdevice *i2cdev, int device_index = DEFAULT_BBG_I2C_DEVICE);
 BBG_err i2c_close_device(i2cdevice *i2cdev);
 BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr);

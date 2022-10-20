@@ -75,7 +75,7 @@ BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 	return BBG_ERR_SUCCESS;
 }
 
-BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
+BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
 		return BBG_ERR_FAILED;
@@ -86,21 +86,13 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
 		return BBG_ERR_FAILED;
 	}
 
-	/*union i2c_smbus_data data;
-	data.block[0] = 32;
-	int len = 0;
-
-	if((len = i2c_smbus_access(i2cdev->fd, I2C_SMBUS_READ, cmd, I2C_SMBUS_I2C_BLOCK_DATA, &data)) == -1) {
-		ERR("Failed to read block data");
+	if(maxlen > I2C_BLOCK_SIZE) {
+		ERR("maxlen cannot be greater than 32");
 		return BBG_ERR_FAILED;
 	}
 
-	DEBUG("Read %d bytes from smbus", len);
-
-	memcpy(buffer, &data.block[1], data.block[0]);*/
-
 	__s32 len = 0;
-	if((len = i2c_smbus_read_i2c_block_data(i2cdev->fd, cmd, I2C_BLOCK_SIZE, (__u8 *)buffer)) == -1) {
+	if((len = i2c_smbus_read_i2c_block_data(i2cdev->fd, cmd, maxlen, (__u8 *)buffer)) == -1) {
 		ERR("Failed to write block data");
 		return BBG_ERR_FAILED;
 	}
@@ -110,17 +102,6 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 cmd) {
 	return BBG_ERR_SUCCESS;
 }
 
-/*static BBG_err buffer_to_data(union i2c_smbus_data *data, void *buffer, unsigned int len) {
-	if(len > I2C_BLOCK_SIZE) {
-		ERR("len cannot be greater than 32");
-		return BBG_ERR_FAILED;
-	}
-
-	data->block[0] = len;
-	memcpy(&data->block + 1, buffer, len);
-
-	return BBG_ERR_SUCCESS;
-}*/
 
 BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) {
 	if(i2cdev == nullptr) {
@@ -138,17 +119,6 @@ BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) 
 		return BBG_ERR_FAILED;
 	}
 
-/*	union i2c_smbus_data data;
-	if(buffer_to_data(&data, buffer, maxlen) == BBG_ERR_FAILED) {
-		ERR("buffer_to_data()");
-		return BBG_ERR_FAILED;
-	}
-
-	if(i2c_smbus_access(i2cdev->fd, I2C_SMBUS_WRITE, cmd, I2C_SMBUS_I2C_BLOCK_BROKEN, &data)) {
-		ERR("i2c_smbus_access()");
-		return BBG_ERR_FAILED;
-	}*/
-
 	return BBG_ERR_SUCCESS;
 }
 
@@ -163,7 +133,7 @@ BBG_err i2c_read_byte_data(i2cdevice *i2cdev, char *data, __u8 cmd) {
 		return BBG_ERR_FAILED;
 	}
 
-	*data = i2c_smbus_read_byte_data(i2cdev->fd, cmd) & 0xff;
+	*data = i2c_smbus_read_byte_data(i2cdev->fd, cmd);
 	if(*data == -1) {
 		ERR("Failed to smbus_read");
 		return BBG_ERR_FAILED;
