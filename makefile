@@ -31,8 +31,11 @@ adc.cpp=$(SRCDIR)/adc.cpp
 i2c.o=$(INTDIR)/i2c.o
 i2c.cpp=$(SRCDIR)/i2c.cpp
 
-$(BIN): init $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o)
-	$(CC) -shared $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(LDOPTS) -o $(BIN)
+encoder.o=$(INTDIR)/encoder.o
+encoder.cpp=$(SRCDIR)/encoder.cpp
+
+$(BIN): init $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o)
+	$(CC) -shared $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o) $(LDOPTS) -o $(BIN)
 
 $(pinmux.o): $(pinmux.cpp)
 	$(CC) $(pinmux.cpp) $(BUILDOPTS) -o $(pinmux.o)
@@ -51,6 +54,9 @@ $(adc.o): $(adc.cpp)
 
 $(i2c.o): $(i2c.cpp)
 	$(CC) $(i2c.cpp) $(BUILDOPTS) -o $(i2c.o)
+
+$(encoder.o): $(encoder.cpp)
+	$(CC) $(encoder.cpp) $(BUILDOPTS) -o $(encoder.o)
 
 init:
 	mkdir -p bin/int
