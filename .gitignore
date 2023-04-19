@@ -1,2 +1,5 @@
 bin
 bin/**
+
+i2c-tools/lib/*.so*
+i2c-tools/lib/*.a*
