@@ -43,7 +43,8 @@ BBG_err export_device(const char *device_path, int index) {
 
 	if(write(fd, index_str, strlen(index_str)) == -1) {
 		if(errno != EBUSY) {
-			ret = BBG_ERR_FAILED;
+			ERR("Error while opening export file");
+			//ret = BBG_ERR_FAILED;
 			goto END;
 		}
 
