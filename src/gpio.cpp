@@ -127,6 +127,17 @@ static int get_gpio_by_pin(const char *pin) {
 	return -1;
 }
 
+static BBG_err gpio_is_exported(int gpio_num) {
+	char gpio_path[64];
+	snprintf(gpio_path, 64, GPIO_SYSFS_DIR "gpio%d", gpio_num);
+
+	if(access(gpio_path, R_OK|W_OK|X_OK) == F_OK) {
+		return BBG_ERR_SUCCESS;
+	}
+
+	return BBG_ERR_FAILED;
+}
+
 BBG_err gpio_export(const char *pin) {
 	DEBUG("gpio_export()");
 	int gpio_number = 0;
@@ -134,6 +145,11 @@ BBG_err gpio_export(const char *pin) {
 	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
 		ERR("Failed to get gpio_number");
 		return BBG_ERR_FAILED;
+	}
+
+	if(gpio_is_exported(gpio_number) == BBG_ERR_SUCCESS) {
+		DEBUG("GPIO is already exported");
+		return BBG_ERR_SUCCESS;
 	}
 
 	if(export_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {

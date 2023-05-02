@@ -38,13 +38,14 @@ BBG_err export_device(const char *device_path, int index) {
 	fd = open(export_device, O_WRONLY);
 	if(fd == -1) {
 		ret = BBG_ERR_FAILED;
+		ERR("Failed to open export device file!");
 		goto END;
 	}
 
 	if(write(fd, index_str, strlen(index_str)) == -1) {
 		if(errno != EBUSY) {
-			ERR("Error while opening export file");
-			//ret = BBG_ERR_FAILED;
+			ERR("Error while writing to export file");
+			ret = BBG_ERR_FAILED;
 			goto END;
 		}
 
@@ -85,12 +86,14 @@ BBG_err unexport_device(const char *device_path, int index) {
 
 	fd = open(unexport_device, O_WRONLY);
 	if(fd == -1) {
+		ERR("Failed to open unexport file");
 		ret = BBG_ERR_FAILED;
 		goto END;
 	}
 
 	if(write(fd, index_str, strlen(index_str)) == -1) {
 		if(errno != EBUSY) {
+			ERR("Failed write to unexport file");
 			ret = BBG_ERR_FAILED;
 			goto END;
 		}
