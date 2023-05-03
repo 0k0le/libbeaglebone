@@ -43,9 +43,13 @@ BBG_err export_device(const char *device_path, int index) {
 	}
 
 	if(write(fd, index_str, strlen(index_str)) == -1) {
-		ERR("Fatal error writing export");
-		ret = BBG_ERR_FAILED;
-		goto END;
+		if(errno != EBUSY) {
+			ERR("Fatal error writing export");
+			ret = BBG_ERR_FAILED;
+			goto END;
+		}
+
+		WARN("Device should already be exported");
 	}
 	
 END:
