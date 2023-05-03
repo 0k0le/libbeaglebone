@@ -274,10 +274,10 @@ BBG_err gpio_unexport(const char *pin) {
 		return BBG_ERR_FAILED;
 	}
 
-	if(unexport_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {
+	/*if(unexport_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {
 		ERR("unexport_device() returned an error");
 		return BBG_ERR_FAILED;
-	}
+	}*/
 
 	return BBG_ERR_SUCCESS;
 }
