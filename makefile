@@ -63,3 +63,7 @@ init:
 
 clean:
 	rm -rf bin
+
+install:
+	mkdir -p /opt/libbeaglebone/
+	cp bin/libbeaglebone.so /opt/libbeaglebone
