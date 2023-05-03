@@ -151,10 +151,10 @@ BBG_err gpio_export(const char *pin) {
 		return BBG_ERR_FAILED;
 	}
 
-	/*if(gpio_is_exported(gpio_number) == BBG_ERR_SUCCESS) {
+	if(gpio_is_exported(gpio_number) == BBG_ERR_SUCCESS) {
 		DEBUG("GPIO is already exported");
 		goto SKIP;
-	}*/
+	}
 
 	if(export_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {
 		ERR("export_device() returned an error");
