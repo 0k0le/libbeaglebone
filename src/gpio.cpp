@@ -11,8 +11,6 @@
 #include "gpio.hpp"
 #include "common.hpp"
 
-#include <pthread.h>
-
 static pins_t table[] = {
   	{ "USR0", "USR0", 53, -1, -1},
   	{ "USR1", "USR1", 54, -1, -1},
@@ -113,7 +111,6 @@ static pins_t table[] = {
 	{ nullptr, nullptr, 0, 0, 0}
 };
 
-
 // Gets gpio number for interfacing with driver
 static int get_gpio_by_pin(const char *pin) {
 	if(pin == nullptr)
@@ -129,7 +126,6 @@ static int get_gpio_by_pin(const char *pin) {
 	WARN("No gpio pin was found for: %s", pin);
 	return -1;
 }
-
 
 static BBG_err gpio_is_exported(int gpio_num) {
 	char gpio_path[64];
@@ -153,7 +149,7 @@ BBG_err gpio_export(const char *pin) {
 
 	if(gpio_is_exported(gpio_number) == BBG_ERR_SUCCESS) {
 		DEBUG("GPIO is already exported");
-		goto SKIP;
+		return BBG_ERR_SUCCESS;
 	}
 
 	if(export_device(GPIO_SYSFS_DIR, gpio_number) == BBG_ERR_FAILED) {
