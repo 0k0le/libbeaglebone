@@ -200,6 +200,41 @@ END:
 	return ret;
 }
 
+int gpio_read(const char *pin) {
+	DEBUG("gpio_read()");
+	int gpio_number = 0;
+	int driver_fd;
+	char gpio_driver_file[64];
+	char retbuf[64];
+
+	if((gpio_number = get_gpio_by_pin(pin)) == -1) {
+		ERR("Failed to get gpio number");
+		return -1;
+	}
+
+	snprintf(gpio_driver_file, 64, GPIO_SYSFS_DIR "gpio%d/value", gpio_number);
+
+	if((driver_fd = open(gpio_driver_file, O_RDONLY)) == -1) {
+		ERR("Failed to open driver file: %s", gpio_driver_file);
+		return -1;
+	}
+
+	int len = 0;
+	if((len = read(driver_fd, retbuf, 63)) == -1) {
+		ERR("Failed to read driver_fd");
+		close(driver_fd);
+		return -1;
+	}
+
+	close(driver_fd);
+
+	retbuf[len] = 0;
+
+	DEBUG("Read result: %s", retbuf);
+	
+	return atoi(retbuf);
+}
+
 BBG_err gpio_write(const char *pin, const int value) {
 	DEBUG("gpio_write()");
 	BBG_err ret = BBG_ERR_SUCCESS;
@@ -257,9 +292,11 @@ BBG_err gpio_init(const char *pin, const char *direction, const int value) {
 		return BBG_ERR_FAILED;
 	}
 
-	if(gpio_write(pin, value) == BBG_ERR_FAILED) {
-		ERR("Failed to write GPIO value");
-		return BBG_ERR_FAILED;
+	if(strcmp(pin, "out") == 0) {
+		if(gpio_write(pin, value) == BBG_ERR_FAILED) {
+			ERR("Failed to write GPIO value");
+			return BBG_ERR_FAILED;
+		}
 	}
 	
 	return BBG_ERR_SUCCESS;

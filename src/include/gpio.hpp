@@ -40,3 +40,4 @@ BBG_err gpio_set_direction(const char *pin, const char *direction);
 BBG_err gpio_write(const char *pin, const int value);
 BBG_err gpio_init(const char *pin, const char *direction, const int value);
 BBG_err gpio_close(const char *pin);
+int gpio_read(const char *pin);
