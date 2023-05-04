@@ -292,7 +292,7 @@ BBG_err gpio_init(const char *pin, const char *direction, const int value) {
 		return BBG_ERR_FAILED;
 	}
 
-	if(strcmp(pin, "out") == 0) {
+	if(strcmp(direction, "out") == 0) {
 		if(gpio_write(pin, value) == BBG_ERR_FAILED) {
 			ERR("Failed to write GPIO value");
 			return BBG_ERR_FAILED;
