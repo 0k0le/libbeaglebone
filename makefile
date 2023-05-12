@@ -36,6 +36,7 @@ encoder.cpp=$(SRCDIR)/encoder.cpp
 
 $(BIN): init $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o)
 	$(CC) -shared $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o) $(LDOPTS) -o $(BIN)
+	ar rcs $(BINDIR)libbeaglebone.a $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o) i2c-tools/lib/libi2c.a
 
 $(pinmux.o): $(pinmux.cpp)
 	$(CC) $(pinmux.cpp) $(BUILDOPTS) -o $(pinmux.o)

@@ -3,3 +3,17 @@ bin/**
 
 i2c-tools/lib/*.so*
 i2c-tools/lib/*.a*
+
+i2c-tools/tools/*.o
+i2c-tools/tools/i2cdetect
+i2c-tools/tools/i2cdump
+i2c-tools/tools/i2cset
+i2c-tools/tools/i2cget
+i2c-tools/tools/i2ctransfer
+
+i2c-tools/lib/*.o
+i2c-tools/lib/*.ao
+i2c-tools/lib/libi2c.so.0.1.1
+i2c-tools/lib/libi2c.a
+i2c-tools/lib/libi2c.so.0
+i2c-tools/lib/libi2c.so
