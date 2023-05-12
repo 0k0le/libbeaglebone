@@ -3,12 +3,17 @@
 #
 # beaglebone-firmware
 
-CC=g++
-BUILDOPTS=-Wall -Wextra -pedantic -fpic -c -O2 -Isrc/include -D_DEBUG
-LDOPTS=-Li2c-tools/lib -l:libi2c.a
+CC=arm-linux-gnueabihf-g++
+AR=ar
 
-BINDIR=bin/
-BIN=bin/libbeaglebone.so
+I2CTOOLSBDIR=i2c-tools/lib
+
+BUILDOPTS=-Wall -Wextra -pedantic -fpic -c -O2 -Isrc/include -D_DEBUG
+LDOPTS=-L$(I2CTOOLSBDIR) -l:libi2c.a
+AROPTS=rcs
+
+BINDIR=bin
+BIN=$(BINDIR)/libbeaglebone.so
 
 INTDIR=bin/int
 SRCDIR=src
@@ -34,9 +39,11 @@ i2c.cpp=$(SRCDIR)/i2c.cpp
 encoder.o=$(INTDIR)/encoder.o
 encoder.cpp=$(SRCDIR)/encoder.cpp
 
+libi2c.a=$(I2CTOOLSBDIR)/libi2c.a
+
 $(BIN): init $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o)
 	$(CC) -shared $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o) $(LDOPTS) -o $(BIN)
-	ar rcs $(BINDIR)libbeaglebone.a $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o) i2c-tools/lib/libi2c.a
+	$(AR) $(AROPTS) $(BINDIR)/libbeaglebone.a $(pinmux.o) $(pwm.o) $(common.o) $(gpio.o) $(adc.o) $(i2c.o) $(encoder.o) $(libi2c.a)
 
 $(pinmux.o): $(pinmux.cpp)
 	$(CC) $(pinmux.cpp) $(BUILDOPTS) -o $(pinmux.o)
