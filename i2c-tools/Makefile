@@ -23,7 +23,7 @@ INSTALL_PROGRAM	:= $(INSTALL) -m 755
 LN		:= ln -sf
 RM		:= rm -f
 
-CC	= arm-linux-gnueabihf-gcc
+CC	?= arm-linux-gnueabihf-gcc
 AR	?= ar
 STRIP	?= strip
 
