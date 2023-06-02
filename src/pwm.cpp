@@ -48,6 +48,8 @@ static pwm_t pwm_table[] = {
   { NULL, 0, 0, 0, NULL, NULL, NULL, NULL, NULL }
 };
 
+// Input: Pin
+// Output: PWM device information
 static pwm_t *get_pwm_by_pin(const char *pin) {
 	for(pwm_t *pwm = pwm_table; pwm->module != NULL; pwm++) {
 		if(strcmp(pwm->pin, pin) == 0) {
@@ -81,6 +83,7 @@ static int is_dmtimer_pin(pwm_t *pwm) {
 	return (strcmp(temp, "timer") == 0);
 }
 
+// Primarily used just for debugging
 static void get_pwm_info(pwm_object *pwmobj) {
 	char period[32];
 	char enable[32];
@@ -109,6 +112,7 @@ static void get_pwm_info(pwm_object *pwmobj) {
 			"\tPeriod: %s", enable, duty_cycle, polarity, period);
 }
 
+// Enable PWM
 static BBG_err write_enable(pwm_object *pwmobj, const char *state) {
 	lseek(pwmobj->enable_fd, 0, SEEK_SET);
 
@@ -120,6 +124,7 @@ static BBG_err write_enable(pwm_object *pwmobj, const char *state) {
 	return BBG_ERR_SUCCESS;
 }
 
+// Change PWM period
 static BBG_err write_period(pwm_object *pwmobj, const char *period) {
 	lseek(pwmobj->period_fd, 0, SEEK_SET);
 
@@ -131,6 +136,7 @@ static BBG_err write_period(pwm_object *pwmobj, const char *period) {
 	return BBG_ERR_SUCCESS;
 }
 
+// Change duty cycle
 static BBG_err write_duty_cycle(pwm_object *pwmobj, const char *dutycycle) {
 	lseek(pwmobj->dutycycle_fd, 0, SEEK_SET);
 

@@ -11,6 +11,7 @@
 #include "i2c.hpp"
 #include <linux/i2c.h>
 
+// Create I2C device from index
 BBG_err i2c_open_device(i2cdevice *i2cdev, int device_index) {
 	char driver_path[64];
 
@@ -51,6 +52,7 @@ BBG_err i2c_close_device(i2cdevice *i2cdev) {
 	return BBG_ERR_SUCCESS;
 }
 
+// Set slave address
 BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
@@ -75,6 +77,7 @@ BBG_err i2c_set_addr(i2cdevice *i2cdev, int addr) {
 	return BBG_ERR_SUCCESS;
 }
 
+// Read I2C data
 BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
@@ -103,6 +106,7 @@ BBG_err i2c_read_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) {
 }
 
 
+// Write I2C data
 BBG_err i2c_write_block(i2cdevice *i2cdev, char *buffer, __u8 maxlen, __u8 cmd) {
 	if(i2cdev == nullptr) {
 		ERR("i2cdev cannot be nullptr");
